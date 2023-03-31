@@ -3,7 +3,9 @@ import random
 from django.http import HttpResponse
 from django.utils.text import slugify
 from faker import Faker
-from ..models import Branch, Language, Tag, Relations, User
+
+from common.models import *
+from ..models import Branch, Relations
 
 #binarytree
 def array_to_bst(nums, bulk):
@@ -42,7 +44,7 @@ def fakeitall(req):
         #create to get diapason of id
         tile = fake.sentence()
         Branch.objects.bulk_create([
-            Branch(title=tile, language=Language.objects.get(name="mghm"),
+            Branch(title=tile, language=Language.objects.get_or_create(name="mghm")[0],
             author=User.objects.get(pk=1), content=fake.paragraph(), slug=slugify(tile), likes=fake.random_int(min=500, max=5000),
             contentlen=len(tile))]
         )
@@ -61,7 +63,7 @@ def fakeitall(req):
             content = fake.paragraph()
             slug = slugify(title)
 
-            branches.append(Branch(title=title, language=Language.objects.get(name="mghm"),
+            branches.append(Branch(title=title, language=Language.objects.get_or_create(name="mghm")[0],
                                    author=User.objects.get(pk=1), content=content, slug=slug,
                                    likes=fake.random_int(min=500, max=5000), contentlen=len(content)))
 

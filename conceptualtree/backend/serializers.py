@@ -1,31 +1,9 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
+from common.models import *
+from common.serializers import *
 from .models import *
 
-class OtherUserSerializer(serializers.ModelSerializer):
-    def update(self, instance, validated_data):
-        pass
-    def create(self, validated_data):
-        pass
-    class Meta:
-        fields = ('username', 'first_name', 'last_name', 'email', 'date_joined')
-        model = User
-
-
-
-class TagField(serializers.PrimaryKeyRelatedField):
-    def to_internal_value(self, data):
-        if self.pk_field is not None:
-            data = self.pk_field.to_internal_value(data)
-        queryset = self.get_queryset()
-        try:
-            if isinstance(data, bool):
-                raise TypeError
-            model = queryset.model
-            return model.objects.get_or_create(pk=data)[0]
-        except (TypeError, ValueError):
-            self.fail('incorrect_type', data_type=type(data).__name__)
 
 
 

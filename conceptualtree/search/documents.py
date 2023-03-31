@@ -3,7 +3,7 @@ from django_elasticsearch_dsl.registries import registry
 from elasticsearch_dsl import analyzer
 
 from backend.models import *
-
+from common.models import *
 
 html_strip = analyzer(
     'html_strip',

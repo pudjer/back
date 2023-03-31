@@ -3,9 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.urls import reverse
 
-class Tag(models.Model):
-    name = models.CharField(max_length=31, primary_key=True)
-
 
 
 
@@ -15,10 +12,10 @@ class Relations(models.Model):
 
 class Branch(models.Model):
     title = models.CharField(max_length=255)
-    language = models.ForeignKey('Language', on_delete=models.PROTECT, blank=True, null=True)
+    language = models.ForeignKey('common.Language', on_delete=models.PROTECT, blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     likes = models.IntegerField(blank=True, default=0, editable=False)
-    tags = models.ManyToManyField('Tag', blank=True, symmetrical=False)
+    tags = models.ManyToManyField('common.Tag', blank=True, symmetrical=False)
     views = models.IntegerField(blank=True, default=0, editable=False)
     time_create = models.TimeField(auto_now_add=True, editable=False, blank=True)
     time_update = models.TimeField(auto_now=True, blank=True, editable=False)
@@ -28,6 +25,10 @@ class Branch(models.Model):
     pre_karma = models.IntegerField(editable=False, blank=True, null=True, db_index=True)
     karma = models.IntegerField(editable=False, blank=True, default=0)
     contentlen = models.IntegerField(editable=False)
+    users_liked = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_liked_Branches', blank=True, editable=False)
+    users_learned = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_learned_Branches', blank=True,
+                                              editable=False)
+    users_wanted = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_wanted_to_learn_Branches', blank=True)
 
 
     def save(self, *args, **kwargs):
@@ -54,25 +55,12 @@ class Branch(models.Model):
                         SELECT backend_relations.id, child_id, parent_id
                         FROM backend_relations
                         WHERE parent_id = %s
-                        UNION ALL
+                        UNION
                         SELECT r.id, r.child_id, r.parent_id
                         FROM relationships_cte cte
                         JOIN backend_relations r ON cte.child_id = r.parent_id
                     )
-                    SELECT DISTINCT * FROM relationships_cte;
+                    SELECT * FROM relationships_cte;
                 """, [self.pk])
 
 
-
-
-
-class User(AbstractUser):
-    liked_Branches = models.ManyToManyField('Branch', related_name='user_liked_Branches', blank=True, editable=False)
-    learned_Branches = models.ManyToManyField('Branch', related_name='user_learned_Branches', blank=True,
-                                              editable=False)
-    wanted_to_Branches = models.ManyToManyField('Branch', related_name='user_wanted_to_learn_Branches', blank=True)
-    language = models.ManyToManyField('Language', related_name='user_languages', blank=True)
-
-
-class Language(models.Model):
-    name = models.CharField(max_length=15, primary_key=True)

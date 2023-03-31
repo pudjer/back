@@ -49,9 +49,9 @@ def create_update_karma():
 			
             
             update backend_branch
-            set karma = sel.karma + likes
+            set karma = sel.karma + pre_karma/sqrt(contentlen + 1)
             from
-            (select bb.id as idiot, round((avg(backend_branch.pre_karma))/sqrt(bb.contentlen + 1)) as karma
+            (select bb.id as idiot, round((avg(backend_branch.pre_karma))) as karma
             from backend_relations as br
             join backend_branch as bb on bb.id = br.parent_id
             join backend_relations as brc on br.child_id = brc.child_id
