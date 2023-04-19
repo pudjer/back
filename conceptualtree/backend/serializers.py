@@ -42,7 +42,7 @@ class NodeSerializer(serializers.ModelSerializer):
 
 
     class Meta:
-        fields = '__all__'
+        exclude = ('users_liked','users_learned','users_wanted',)
         model = Branch
 
 

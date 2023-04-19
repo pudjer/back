@@ -23,7 +23,6 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
-    path('auth/', include('djoser.urls.authtoken')),
     path('common/', include('common.urls'))
 
 ]

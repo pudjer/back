@@ -30,15 +30,14 @@ class NodeDocument(Document):
         properties={
             'username': fields.KeywordField()
         })
-    suggest = fields.CompletionField()
     class Index:
         name = 'nodes'
         settings = {'number_of_shards': 1,
                     'number_of_replicas': 0}
     class Django:
         model = Branch
+        related_models = [Language, User]
 
-    related_models = [Language, User]
 
     def get_queryset(self):
         return super().get_queryset().select_related(
@@ -48,5 +47,3 @@ class NodeDocument(Document):
 
     def get_instances_from_related(self, related_instance):
             return related_instance.branch_set.all()
-
-# recursivefield, raw,

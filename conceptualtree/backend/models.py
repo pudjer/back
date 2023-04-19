@@ -20,7 +20,7 @@ class Branch(models.Model):
     time_create = models.TimeField(auto_now_add=True, editable=False, blank=True)
     time_update = models.TimeField(auto_now=True, blank=True, editable=False)
     links = models.ManyToManyField('self', blank=True, symmetrical=False, through='Relations', through_fields=('parent','child' ),)
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
     content = models.TextField(blank=True, null=True)
     pre_karma = models.IntegerField(editable=False, blank=True, null=True, db_index=True)
     karma = models.IntegerField(editable=False, blank=True, default=0)

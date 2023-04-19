@@ -4,5 +4,5 @@ from search.views import SearchNodeViewSet
 
 urlpatterns = [
     #path('', index , name='home' )
-    path('node/<str:query>/', SearchNodeViewSet.as_view({'get': 'list'}), name='searchnode')
+    path('node/', SearchNodeViewSet.as_view({'get': 'list'}), name='searchnode'),
 ]
